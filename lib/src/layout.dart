@@ -27,6 +27,7 @@ class BottomNavLayout extends StatefulWidget {
     this.extendBody = false,
     this.resizeToAvoidBottomInset = true,
     this.pageTransitionData,
+    this.onIndexChangedInternally,
   })  : assert(pages.length >= 1, "At least 1 page is required"),
         assert(
             pageStack == null ||
@@ -78,6 +79,9 @@ class BottomNavLayout extends StatefulWidget {
   /// Page transition data delegate.
   /// If null, no transition is applied.
   final PageTransitionData? pageTransitionData;
+
+  // Hax
+  final Function(int index)? onIndexChangedInternally;
 
   @override
   State<StatefulWidget> createState() => _BottomNavLayoutState();
@@ -169,6 +173,9 @@ class _BottomNavLayoutState extends State<BottomNavLayout> {
     if (pageStack.isNotEmpty) {
       // Set state to change the page
       setState(() {});
+      if (widget.onIndexChangedInternally != null) {
+        widget.onIndexChangedInternally!(pageStack.peek());
+      }
 
       // Consume pop event
       return false;
